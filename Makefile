@@ -9,11 +9,11 @@ OUTPUT_DIRECTORY := build
 DFU_PACKAGE      := $(OUTPUT_DIRECTORY)/nrf52840_xxaa.dfu
 DFU_PORT         ?= /dev/ttyACM0
 
-SDK_ROOT ?=
+SDK_ROOT ?= ../esl-nsdk
 PROJ_DIR ?= .
 
 $(OUTPUT_DIRECTORY)/nrf52840_xxaa.out: \
-  LINKER_SCRIPT  := pca10059/mbr/armgcc/blinky_gcc_nrf52.ld
+  LINKER_SCRIPT  := pca10059/blinky_gcc_nrf52.ld
 
 # Source files common to all targets
 SRC_FILES += \
