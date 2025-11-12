@@ -39,6 +39,7 @@ SRC_FILES += \
 # Project source files
 SRC_FILES += \
   $(PROJ_DIR)/src/main.c \
+  $(PROJ_DIR)/src/gpio_control.c \
 
 # Include folders common to all targets
 INC_FOLDERS += \

@@ -1,48 +1,42 @@
-#include "boards.h"
-#include "nrf_delay.h"
+// std
 #include <stdint.h>
+
+// esl-nsdk
+#include "nrf_delay.h"
+#include "nrf_gpio.h"
+
+#include "gpio_control.h"
 
 #define DEVICE_LABEL 6613 // Device label
 
-#define BLINK_DELAY 250
-#define PAUSE_DELAY 750
-
-enum COLOR { YELLOW, RED, GREEN, BLUE };
-
-static inline void blink(int color, int number_to_blink);
 static inline uint64_t get_id();
 
 // Returns device id (Label with #ABCD)
 static inline uint64_t get_id() { return DEVICE_LABEL; }
 
-// Blink `number_to_blink` times with `color` color.
-static inline void blink(int color, int number_to_blink) {
-  while (number_to_blink--) {
-    bsp_board_led_on(color);
-    nrf_delay_ms(BLINK_DELAY);
-    bsp_board_led_off(color);
-    nrf_delay_ms(BLINK_DELAY);
-  }
-  bsp_board_led_off(color);
-}
-
 int main(void) {
-  /* Configure board. */
-  bsp_board_init(BSP_INIT_LEDS);
+  init_gpio();
 
   uint32_t id = get_id();
 
-  uint8_t digits[4]; // Our label-id is 4-digit number.
+  uint8_t digits[4];          // Our label-id is 4-digit number.
   digits[0] = id / 1000 % 10; // The highest digit
   digits[1] = id / 100 % 10;
   digits[2] = id / 10 % 10;
-  digits[3] = id % 10;        // The lowest digit
+  digits[3] = id % 10; // The lowest digit
+  uint32_t sequense[4] = {LED_RED, LED_GREEN, LED_BLUE, LED_YELLOW};
 
-  /* Toggle LEDs. */
+  int current_index = 0;
+  int blink_counter = 0;
   while (1) {
-    for (int i = 0; i < LEDS_NUMBER; ++i) {
-      blink(i, digits[i]);
+    if (is_button_pressed()) {
+      blink_and_stay_on_if_button_not_pressed(sequense[current_index]);
+      blink_counter++;
+      if (blink_counter >= digits[current_index]) {
+        current_index = (current_index + 1) % 4;
+        blink_counter = 0;
+      }
     }
-    nrf_delay_ms(PAUSE_DELAY);
+    nrf_delay_ms(BLINK_DELAY);
   }
 }
