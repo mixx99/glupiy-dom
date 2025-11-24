@@ -34,9 +34,6 @@ void turn_off_every_led() {
   LED_OFF(LED_YELLOW);
 }
 
-// Returns 1 if button pressed, zero otherwise.
-// int is_button_pressed() { return nrf_gpio_pin_read(BUTTON) == 0; }
-
 void smooth_blink(uint32_t pin_color, uint32_t us_total_period) {
   nrfx_systick_state_t start_time, current_time, last_oper;
   uint32_t period = 100; // us
