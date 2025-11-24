@@ -23,7 +23,6 @@
 void init_gpio();
 void blink(uint32_t pin_color);
 void turn_off_every_led();
-// int is_button_pressed(); // TODO: Delete?
 void smooth_blink(uint32_t pin_color, uint32_t us_total_period);
 
 #endif
