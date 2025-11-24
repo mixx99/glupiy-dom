@@ -17,10 +17,12 @@
 #define LED_ON(pin) nrf_gpio_pin_write(pin, 0)
 #define LED_OFF(pin) nrf_gpio_pin_write(pin, 1)
 
-void blink(uint32_t pin_color);
-void blink_and_stay_on_if_button_not_pressed(uint32_t pin_color);
-void turn_off_every_led();
+#define ONE_SEC_US 1000000
+#define ONE_SEC_MS 1000
+
 void init_gpio();
-int is_button_pressed();
+void blink(uint32_t pin_color);
+void turn_off_every_led();
+void smooth_blink(uint32_t pin_color, uint32_t us_total_period);
 
 #endif
