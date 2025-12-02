@@ -1,7 +1,7 @@
 # try:
-# make SDK_ROOT=*PATH_TO_SDK_ROOT_DIR*
-# make SDK_ROOT=*PATH_TO_SDK_ROOT_DIR* dfu
-# make SDK_ROOT=*PATH_TO_SDK_ROOT_DIR* clean
+# make
+# make dfu
+# make clean
 
 PROJECT_NAME     := blinky_pca10059_mbr
 TARGETS          := nrf52840_xxaa
@@ -50,7 +50,8 @@ SRC_FILES += \
   $(PROJ_DIR)/src/main.c \
   $(PROJ_DIR)/src/led_control.c \
   $(PROJ_DIR)/src/gpiote_control.c \
-  $(PROJ_DIR)/src/app.c \
+	$(PROJ_DIR)/src/pwm_control.c \
+	$(PROJ_DIR)/src/hsv.c \
 
 # Include folders common to all targets
 INC_FOLDERS += \
