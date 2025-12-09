@@ -2,6 +2,7 @@
 #include "gpiote_control.h"
 #include "hsv.h"
 #include "led_control.h"
+#include "volatile_memory.h"
 
 // esl-nsdk
 #include "app_timer.h"
@@ -33,7 +34,6 @@ static const int YELLOW_ID = 0;
 static const int RED_ID = 1;
 static const int GREEN_ID = 2;
 static const int BLUE_ID = 3;
-static int yellow_state = 0;
 static volatile uint32_t pwm_tick = 0;
 
 static const int YELLOW_LONG_DELAY = 30;
@@ -49,9 +49,7 @@ static void mode_timer_handler(void *p_context);
 static inline void update_mode_indicator();
 
 static inline void init_hsv_and_rgb() {
-  hsv.s = 100;
-  hsv.v = 100;
-  hsv.h = (DEVICE_LABEL % 100);
+  hsv = get_start_hsv();
   rgb = hsv_to_rgb(hsv);
   values[RED_ID] = rgb.r;
   values[GREEN_ID] = rgb.g;
@@ -120,6 +118,8 @@ void init_pwm() {
 
 static inline void handle_double_click() {
   current_mode = (current_mode + 1) % 4;
+  if (current_mode == 0)
+    set_start_hsv(hsv);
   update_mode_indicator();
 }
 

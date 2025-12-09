@@ -16,7 +16,6 @@
 
 static volatile bool waiting_second_click = 0;
 static volatile bool ignore_release_once = 0;
-static bool double_click_active = 0;
 static bool pressed = false;
 static bool first_click = false;
 

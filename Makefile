@@ -45,6 +45,7 @@ SRC_FILES += \
   $(SDK_ROOT)/components/libraries/atomic_fifo/nrf_atfifo.c \
   $(SDK_ROOT)/components/libraries/sortlist/nrf_sortlist.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_clock.c \
+	$(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_nvmc.c \
 # Project source files
 SRC_FILES += \
   $(PROJ_DIR)/src/main.c \
@@ -52,6 +53,8 @@ SRC_FILES += \
   $(PROJ_DIR)/src/gpiote_control.c \
 	$(PROJ_DIR)/src/pwm_control.c \
 	$(PROJ_DIR)/src/hsv.c \
+	$(PROJ_DIR)/src/volatile_memory.c \
+
 
 # Include folders common to all targets
 INC_FOLDERS += \
