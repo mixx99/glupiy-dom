@@ -45,6 +45,8 @@
 #endif
 // <h> nRF_Core 
 
+#define NRFX_NVMC_ENABLED 1
+
 #ifndef SYSTICK_ENABLED
 #define SYSTICK_ENABLED 1
 #endif

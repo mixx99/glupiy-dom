@@ -20,9 +20,10 @@
 #define ONE_SEC_US 1000000
 #define ONE_SEC_MS 1000
 
+#define DEVICE_LABEL 6613
+
 void init_gpio();
 void blink(uint32_t pin_color);
 void turn_off_every_led();
-void smooth_blink(uint32_t pin_color, uint32_t us_total_period);
 
 #endif
