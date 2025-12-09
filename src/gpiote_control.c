@@ -17,6 +17,8 @@
 static volatile bool waiting_second_click = 0;
 static volatile bool ignore_release_once = 0;
 static bool double_click_active = 0;
+static bool pressed = false;
+static bool first_click = false;
 
 APP_TIMER_DEF(debounce_timer);
 APP_TIMER_DEF(double_click_timer);
@@ -35,50 +37,49 @@ void button_handler(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action) {
 }
 
 void debounce_timeout_handler(void *p_context) {
-  bool pressed = !nrfx_gpiote_in_is_set(BUTTON);
+  bool now_pressed = !nrfx_gpiote_in_is_set(BUTTON);
 
-  if (pressed) {
-    if (!waiting_second_click) {
-      waiting_second_click = true;
-      if (pressed) {
-        handle_pwm(BUTTON_PRESSED);
-        app_timer_start(hold_timer, APP_TIMER_TICKS(20), NULL);
-      } else {
-        app_timer_stop(hold_timer);
-        handle_pwm(BUTTON_RELEASED);
-      }
+  if (now_pressed && !pressed) {
+    pressed = true;
 
+    if (!first_click) {
+      first_click = true;
+
+      // первый клик
       app_timer_start(double_click_timer,
                       APP_TIMER_TICKS(TIMEOUT_DOUBLE_CLICK_TIME), NULL);
+
+      // отправляем только PRESSED
+      handle_pwm(BUTTON_PRESSED);
+
+      // старт холда
+      app_timer_start(hold_timer, APP_TIMER_TICKS(50), NULL);
     } else {
-      waiting_second_click = false;
+      // второй клик → ДВОЙНОЙ
+      first_click = false;
 
-      if (!double_click_active) {
-        handle_pwm(BUTTON_DOUBLE_CLICK);
-        double_click_active = 1;
-      } else {
-        handle_pwm(BUTTON_NONE);
-        double_click_active = 0;
-      }
-
-      ignore_release_once = true;
+      handle_pwm(BUTTON_DOUBLE_CLICK);
 
       app_timer_stop(double_click_timer);
-    }
-  } else {
-    if (ignore_release_once) {
-      ignore_release_once = false;
-      return;
+      app_timer_stop(hold_timer);
     }
 
-    handle_pwm(BUTTON_RELEASED);
+  } else if (!now_pressed && pressed) {
+    pressed = false;
+
+    // если отпускание произошло ДО второго клика — ничего не делаем
+    // double-click таймер сам решит
+    app_timer_stop(hold_timer);
   }
 }
 
 void double_click_timeout_handler(void *p_context) {
-  waiting_second_click = false;
+  if (first_click) {
+    // это одиночный клик
+    handle_pwm(BUTTON_RELEASED);
+  }
 
-  handle_pwm(BUTTON_RELEASED);
+  first_click = false;
 }
 
 void init_gpiote() {
